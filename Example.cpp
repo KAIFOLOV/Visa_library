@@ -14,6 +14,7 @@
 #include "stdafx.h"
 #include "visa.h"
 
+
 int main(int argc, char* argv[])
 {
 	ViStatus status;                        // Error checking
@@ -23,6 +24,7 @@ int main(int argc, char* argv[])
 	const int NOP = 201;                           // Number of measurement points
 	double Data[NOP * 2];                // Measurement data array
 	double Freq[NOP];                    // Frequency array
+	double ReturnLoss[NOP];              // Loss array
 
 	status = viOpenDefaultRM(&defaultRM);
 
@@ -79,10 +81,11 @@ int main(int argc, char* argv[])
 	//
 	// Display measurement data
 	//
-	printf("%20s %20s %20s\n", "Frequency", "Real", "Imag");
+	printf("%20s %20s %20s %20s\n", "Frequency", "Real", "Imag", "ReturnLoss");
 	for (int i = 0; i < NOP; i++)
 	{
-		printf("%20f %20f %20f\n", Freq[i], Data[i * 2], Data[i * 2 + 1]);
+		ReturnLoss[i] = -20 * log10(sqrt(pow(Data[i * 2], 2) + pow(Data[i * 2 + 1], 2)));
+		printf("%20f %20f %20f %20f\n", Freq[i], Data[i * 2], Data[i * 2 + 1], ReturnLoss[i]);
 	}
 
 	printf("Press ENTER to close...");
